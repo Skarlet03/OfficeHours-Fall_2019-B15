@@ -3,11 +3,16 @@ import com.cybertek.base.TestBase;
 import com.cybertek.utilities.ConfigurationReader;
 import com.cybertek.utilities.Driver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.swing.text.Utilities;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class WaitPractice extends TestBase {
@@ -46,10 +51,48 @@ public class WaitPractice extends TestBase {
         password.sendKeys(ConfigurationReader.getProperty("password"));
         submit.click();
 
-        WebElement account = driver.findElement(By.xpath("//span[.='Accounts']/following-sibling::span/following-sibling::a/parent::li"));
+        webDriverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("loadingoverlay")));
+
+        WebElement account = driver.findElement(By.xpath("//span[.='Accounts']/following-sibling::a"));
         webDriverWait.until(ExpectedConditions.elementToBeClickable(account));
 
         account.click();
+
+        /*
+                table
+                    tbody
+                        thead - header
+                        tr - table row
+                        td - table data
+
+                        print all owner names
+         */
+
+        List <WebElement> owners = driver.findElements(By.xpath("//table/tbody/tr/td[6]"));
+        for (WebElement each :
+                owners) {
+            System.out.println(each.getText());
+        }
+
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@title='Filters']")));
+        driver.findElement(By.xpath("//a[@title='Filters']")).click();
+        driver.findElement(By.xpath("//div[contains(text(), 'Owner')]")).click();
+
+        String searchFor = "cyber tek";
+
+        WebElement filterInput = driver.findElement(By.id("s2id_autogen2"));
+        filterInput.sendKeys(searchFor);
+
+        driver.findElement(By.xpath("//span[.='"+searchFor+"']")).click(); ////span[.='cyber tek']
+        driver.findElement(By.xpath("(//button[.='Update'])[1]")).click();
+
+        List <WebElement> results = driver.findElements(By.xpath("//table/tbody/tr/td[6]"));
+
+        for (WebElement each :
+                results) {
+            Assert.assertEquals(each.getText(), searchFor);
+        }
+
 
 
 
