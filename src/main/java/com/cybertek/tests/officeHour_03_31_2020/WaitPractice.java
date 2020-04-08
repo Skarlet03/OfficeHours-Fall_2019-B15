@@ -38,7 +38,7 @@ public class WaitPractice extends TestBase {
      */
 
     @Test
-    public void testWait(){
+    public void testWait() throws InterruptedException {
         driver.get(ConfigurationReader.getProperty("url"));
 
         webDriverWait.until(ExpectedConditions.titleIs("Login"));
@@ -87,6 +87,8 @@ public class WaitPractice extends TestBase {
         driver.findElement(By.xpath("(//button[.='Update'])[1]")).click();
 
         List <WebElement> results = driver.findElements(By.xpath("//table/tbody/tr/td[6]"));
+
+        Thread.sleep(2000);
 
         for (WebElement each :
                 results) {
